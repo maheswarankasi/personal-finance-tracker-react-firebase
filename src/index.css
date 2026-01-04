@@ -45,7 +45,7 @@ span,
   transition: all 0.3s;
 }
 
-.input-flex{
+.input-flex {
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -55,29 +55,29 @@ span,
   border-radius: 0.5rem !important;
   padding: 0rem 0.5rem;
 }
-.input-flex input{
+.input-flex input {
   width: 100%;
   padding: 0.5rem;
   border: 0;
 }
-.input-flex input:focus{
+.input-flex input:focus {
   outline: none;
 }
-.select-input{
+.select-input {
   width: 30%;
   margin-right: 10px;
   display: flex;
   align-items: center;
-  box-shadow: 0 0 30px 8px rgba(227,227,227,0.75);
+  box-shadow: 0 0 30px 8px rgba(227, 227, 227, 0.75);
   border-radius: 0.5rem !important;
-  padding: 0.2rem 0.5rem
+  padding: 0.2rem 0.5rem;
 }
-.select-input-2>div{
+.select-input-2 > div {
   border-width: 0 !important;
   border-bottom-width: 1px !important;
   border-radius: 0 !important;
   border-color: #000 !important;
 }
-.select-input > div{
+.select-input > div {
   border: 0px solid #fff !important;
 }

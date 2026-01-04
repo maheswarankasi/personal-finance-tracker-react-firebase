@@ -1,30 +1,50 @@
-import { Line } from "@ant-design/charts";
+import { Line, Pie } from "@ant-design/charts";
 import React from "react";
 
-const Charts = () => {
-  const data = [
-    { year: "1991", value: 3 },
-    { year: "1992", value: 4 },
-    { year: "1993", value: 3.5 },
-    { year: "1994", value: 5 },
-    { year: "1995", value: 4.9 },
-    { year: "1996", value: 6 },
-    { year: "1997", value: 7 },
-    { year: "1998", value: 9 },
-    { year: "1999", value: 13 },
-  ];
+const Charts = ({ sortedTransactions }) => {
+  const data = sortedTransactions.map((item) => {
+    return { date: item.date, amount: item.amount };
+  });
+
+  const spendingData = sortedTransactions.filter((transaction) => {
+    if (transaction.type === "expense") {
+      return { tag: transaction.tag, amount: transaction.amount };
+    }
+  });
+  
+  let finalSpendings = spendingData.reduce((acc, obj)=>{
+    let key = obj.tag;
+    if(!acc[key]){
+      acc[key]={tag:obj.tag, amount: obj.amount}
+    }else {
+      acc[key].amount += obj.amount;
+    }
+    return acc;
+  },{})
 
   const config = {
     data,
-    xField: "year",
-    yField: "value",
+    xField: "date",
+    yField: "amount",
+    autoFit: true,
   };
 
-  // let chart;
+  const spendingConfig = {
+    data: Object.values(finalSpendings),
+    angleField: "amount",
+    colorField: "tag",
+  };
 
   return (
-    <div>
-      <Line {...config} />
+    <div className="charts-wrapper">
+      <div>
+        <h2>Your Analytics</h2>
+        <Line {...config} />
+      </div>
+      <div>
+        <h2>Your Spendings</h2>
+        <Pie {...spendingConfig} />
+      </div>
     </div>
   );
 };
