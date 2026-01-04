@@ -3,19 +3,12 @@
 import React, { useEffect, useState } from "react";
 import Header from "../../components/Header/Header";
 import Cards from "../../components/Cards/Cards";
-import moment from "moment";
+// import moment from "moment";
 import { Modal } from "antd";
 import AddExpenseModal from "../../components/Modals/AddExpense";
 import AddIncomeModal from "../../components/Modals/AddIncome";
 import { toast } from "react-toastify";
-import {
-  addDoc,
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-} from "firebase/firestore";
+import { addDoc, collection, getDocs, query } from "firebase/firestore";
 import { auth, db } from "../../firebase-config";
 import { useAuthState } from "react-firebase-hooks/auth";
 import TransactionsTable from "../../components/TransactionsTable/TransactionsTable";
@@ -33,7 +26,7 @@ const DashboardPage = () => {
   useEffect(() => {
     // Get all doc from a collection
     fetchTransactions();
-  }, []);
+  }, [user]);
 
   const showExpenseModal = () => {
     setIsExpenseModalVisible(true);
@@ -51,7 +44,7 @@ const DashboardPage = () => {
   const onFinish = (values, type) => {
     const newTransaction = {
       type: type,
-      date: moment(values.date).format("YYYY-MM-DD"),
+      date: values.date.format("YYYY-MM-DD"),
       amount: parseFloat(values.amount),
       tag: values.tag,
       name: values.name,
@@ -64,21 +57,21 @@ const DashboardPage = () => {
     calculateBalance();
   };
 
-  async function addTransaction(transaction) {
+  async function addTransaction(transaction, many) {
     try {
       const docRef = await addDoc(
         collection(db, `users/${user.uid}/transactions`),
         transaction
       );
       console.log("Document writter with ID: ", docRef.id);
-      toast.success("Transaction Added");
+      if (!many) toast.success("Transaction Added");
       let newArr = transactions;
       newArr.push(transaction);
       setTransactions(newArr);
       calculateBalance();
     } catch (e) {
       console.error("Error adding document: ", e);
-      toast.error("Couldn't add transaction");
+      if (!many) toast.error("Couldn't add transaction");
     }
   }
 
@@ -101,8 +94,6 @@ const DashboardPage = () => {
     setExpenses(expensesTotal);
     setCurrentBalance(incomeTotal - expensesTotal);
   };
-
- 
 
   async function fetchTransactions() {
     setLoading(true);
@@ -144,7 +135,11 @@ const DashboardPage = () => {
             handleExpenseCancel={handleExpenseCancel}
             onFinish={onFinish}
           />
-          <TransactionsTable transactions={transactions} />
+          <TransactionsTable
+            transactions={transactions}
+            fetchTransactions={fetchTransactions}
+            addTransaction={addTransaction}
+          />
         </>
       )}
     </div>
