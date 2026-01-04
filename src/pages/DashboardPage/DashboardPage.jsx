@@ -12,6 +12,7 @@ import { addDoc, collection, getDocs, query } from "firebase/firestore";
 import { auth, db } from "../../firebase-config";
 import { useAuthState } from "react-firebase-hooks/auth";
 import TransactionsTable from "../../components/TransactionsTable/TransactionsTable";
+import Charts from "../../components/Charts/Charts";
 
 const DashboardPage = () => {
   const [user] = useAuthState(auth);
@@ -125,6 +126,7 @@ const DashboardPage = () => {
             showExpenseModal={showExpenseModal}
             showIncomeModal={showIncomeModal}
           />
+          <Charts />
           <AddIncomeModal
             isIncomeModalVisible={isIncomeModalVisible}
             handleIncomeCancel={handleIncomeCancel}
